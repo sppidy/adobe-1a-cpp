@@ -1,0 +1,125 @@
+# Build directories
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Model directories (keep structure but ignore large files)
+models/*/*.onnx
+models/*/*.pth
+models/*/*.pt
+models/*/*.bin
+models/*/*.tar
+models/*/**/*.tar
+models/yolo_layout/yolov12.onnx
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+pdf_processor
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
+*.txt.log
+pdf_extraction.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Output directories
+output/
+output_images/
+temp/
+tmp/
+
+# Python cache (if any Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.zip
+
+# Core dumps
+core.*
+
+# Profiling data
+*.prof
+gmon.out
+
+# Test output
+test_output/
+test_results/
+
+# Documentation build
+docs/_build/
+doc/_build/
+
+# Local configuration
+config.local.json
+*.local.*
