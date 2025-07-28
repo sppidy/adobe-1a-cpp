@@ -1,0 +1,31 @@
+services:
+  pdf-processor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pdf-processor:latest
+    container_name: pdf-processor
+    volumes:
+      # Mount input directory (put PDFs here)
+      - ./input:/app/input:ro
+      # Mount output directory (results will appear here)
+      - ./output:/app/output:rw
+    working_dir: /app
+    # Override default entrypoint if needed
+    # command: ["./pdf_processor", "--verbose", "/app/input/document.pdf"]
+    
+  # Development version with source code mounted
+  pdf-processor-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder  # Use builder stage for development
+    image: pdf-processor-dev:latest
+    container_name: pdf-processor-dev
+    volumes:
+      - ./input:/app/input:ro
+      - ./output:/app/output:rw
+      - ./src:/app/src:ro  # Mount source for development
+    working_dir: /app/build
+    # For development: rebuild and run
+    command: ["sh", "-c", "make -j$(nproc) && ./pdf_processor --help"]

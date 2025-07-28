@@ -103,7 +103,6 @@ ENV/
 *.iso
 *.jar
 *.rar
-*.zip
 
 # Core dumps
 core.*

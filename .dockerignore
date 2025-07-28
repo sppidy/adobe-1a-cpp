@@ -1,0 +1,53 @@
+# Docker ignore file for PDF Processor
+# Prevents unnecessary files from being sent to Docker build context
+
+# Build artifacts
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+pdf_processor
+*.o
+*.a
+*.so
+
+# Output files
+output/
+temp/
+*.json
+
+# Version control
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Test files (if any)
+test/
+tests/
+*.pdf
+
+# Documentation (will be in image anyway)
+README.md
+USAGE.md
+
+# This dockerfile itself (avoid recursion)
+Dockerfile

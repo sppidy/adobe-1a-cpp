@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <cstdio>
+#include <sstream>
 
 #ifdef USE_MUPDF
 #include <mupdf/fitz.h>
@@ -377,6 +378,20 @@ std::vector<HeadingInfo> PDFProcessor::process_single_page_ai(const cv::Mat& ima
                     // Step 6: T5 text correction (currently simplified)
                     TextCorrector corrector;
                     std::string corrected_text = corrector.correct_text(extracted_text);
+                    
+                    // Step 6.5: Apply basic heading restrictions
+                    // Count words in the corrected text
+                    int word_count = 0;
+                    std::istringstream iss(corrected_text);
+                    std::string word;
+                    while (iss >> word && word_count <= 15) {
+                        word_count++;
+                    }
+                    
+                    // Skip if text has more than 10 words (likely not a heading)
+                    if (word_count > 15) {
+                        continue;
+                    }
                     
                     // Step 7: Use sophisticated HeadingClassifier to determine level
                     HeadingLevel classified_level = HeadingLevel::H2; // Default

@@ -36,13 +36,22 @@ else()
     set(USE_LIBTORCH OFF)
 endif()
 
-# MuPDF for PDF processing  
-pkg_check_modules(MUPDF mupdf)
-if(NOT MUPDF_FOUND)
-    # Fallback to manual search
-    find_library(MUPDF_LIB mupdf PATHS /usr/lib /usr/local/lib)
-    find_library(MUPDF_THIRD_LIB mupdf-third PATHS /usr/lib /usr/local/lib)
-    find_path(MUPDF_INCLUDE_DIR mupdf/fitz.h PATHS /usr/include /usr/local/include)
+# MuPDF for PDF processing - Force shared library usage
+# First remove static libraries to force shared library linking
+find_library(MUPDF_SHARED_LIB NAMES mupdf PATHS /usr/lib /usr/local/lib NO_DEFAULT_PATH)
+find_path(MUPDF_INCLUDE_DIR mupdf/fitz.h PATHS /usr/include /usr/local/include)
+
+if(MUPDF_SHARED_LIB AND MUPDF_INCLUDE_DIR)
+    message(STATUS "Found MuPDF shared library: ${MUPDF_SHARED_LIB}")
+    set(MUPDF_FOUND TRUE)
+    set(MUPDF_LIBRARIES ${MUPDF_SHARED_LIB})
+    set(MUPDF_INCLUDE_DIRS ${MUPDF_INCLUDE_DIR})
+else()
+    # Fallback to pkg-config if manual search fails
+    pkg_check_modules(MUPDF mupdf)
+    if(NOT MUPDF_FOUND)
+        message(STATUS "MuPDF not found")
+    endif()
 endif()
 
 # ONNX Runtime (fallback for non-LibTorch models)
@@ -116,18 +125,14 @@ if(ONNXRUNTIME_LIB)
     target_link_libraries(pdf_processor ${ONNXRUNTIME_LIB})
 endif()
 
-# Link MuPDF
+# Link MuPDF - Always use shared library
 if(MUPDF_FOUND)
     target_include_directories(pdf_processor PRIVATE ${MUPDF_INCLUDE_DIRS})
     target_link_libraries(pdf_processor ${MUPDF_LIBRARIES})
     add_definitions(-DUSE_MUPDF)
-elseif(MUPDF_LIB)
-    target_include_directories(pdf_processor PRIVATE ${MUPDF_INCLUDE_DIR})
-    target_link_libraries(pdf_processor ${MUPDF_LIB})
-    if(MUPDF_THIRD_LIB)
-        target_link_libraries(pdf_processor ${MUPDF_THIRD_LIB})
-    endif()
-    add_definitions(-DUSE_MUPDF)
+    message(STATUS "Linking MuPDF: ${MUPDF_LIBRARIES}")
+else()
+    message(STATUS "MuPDF not found - PDF processing disabled")
 endif()
 
 # Configuration summary
